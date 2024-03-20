@@ -1,11 +1,15 @@
-srsRAN UDP
-1.原理
-　																			IP:网卡IPv4（ifconfig） PORT：1111-8888
+# srsRAN UDP
+## 原理
 
-![image-20240320225518607](C:\Users\ChengJiangBo\AppData\Roaming\Typora\typora-user-images\image-20240320225518607.png)
+### IP:网卡IPv4（ifconfig） PORT：1111-8888
 
-2.UDP文件（可进行独立测试）
-编译
+
+
+![image-20240320230852866](C:\Users\ChengJiangBo\AppData\Roaming\Typora\typora-user-images\image-20240320230852866.png)
+
+## UDP文件（可进行独立测试）
+
+### 编译
 
 ```
 cd srsRAN_2024
@@ -16,7 +20,8 @@ g++ test_receive.cc -o rec
 ```
 
 
-运行（4个终端）
+
+### 运行（4个终端）
 
 ```
 cd srsRAN_2024
@@ -26,15 +31,20 @@ cd srsRAN_2024
 ./rec
 ```
 
-3.srsRAN+UDP
-编译srsRAN(第一次编译需新建build）
+
+
+## srsRAN+UDP
+
+### 编译srsRAN(第一次编译需新建build）
 
 ```
 cd srsRAN_2024
 bash ./complie.sh
 ```
 
-编译UDP route
+
+
+### 编译UDP route
 
 ```
 cd srsRAN_2024
@@ -42,7 +52,9 @@ g++ test_route.cc -o route
 g++ test_route_2.cc -o route_2
 ```
 
-首先要运行UDP route
+
+
+### 首先要运行UDP route
 
 ```
 cd srsRAN_2024
@@ -50,21 +62,26 @@ cd srsRAN_2024
 ```
 
 
-第二个终端
+
+### 第二个终端
 
 ```
 cd srsRAN_2024
 ./route_2
 ```
 
-再运行srsRAN
+
+
+### 再运行srsRAN
 
 ```
 cd srsRAN_2024
 sudo bash ./go.sh 
 ```
 
-手机连接上后，新开终端
+
+
+### 手机连接上后，新开终端
 
 ```
 cd srsRAN_2024
