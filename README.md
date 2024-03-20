@@ -5,7 +5,7 @@
 
 
 
-![image-20240320230852866](C:\Users\ChengJiangBo\AppData\Roaming\Typora\typora-user-images\image-20240320230852866.png)
+![pic](C:\Users\ChengJiangBo\Desktop\srsRAN_2024\pic.png)
 
 ## UDP文件（可进行独立测试）
 
