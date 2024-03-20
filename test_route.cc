@@ -10,14 +10,14 @@
 #define MAX_BUFFER_SIZE 1500 
 
 #define ROUTE_PORT 2222  
-#define ROUTE_IP "127.0.100.2"  
+#define ROUTE_IP "10.24.145.5"  
 
 #define ROUTE_PORT_2 3333
-#define ROUTE_IP_2 "127.0.100.2"
+#define ROUTE_IP_2 "10.24.145.5"
 
-#define DESTINATION_IP "127.0.100.4"  
-#define DESTINATION_PORT 4445
-  
+#define DESTINATION_IP "10.24.145.5"  
+#define DESTINATION_PORT 4444
+
 int main() {  
 
      
@@ -66,13 +66,13 @@ int main() {
         
        
 
-        printf("---------------receiving----------------\n");
+        printf("-----------------------------receiving---------------------------\n");
         printf("index: %d\n",num);
         printf("my ip:\t\t%s:%d\n",inet_ntoa(route_addr.sin_addr), ntohs(route_addr.sin_port));
         printf("source ip : \t%s:%d\n",inet_ntoa(source_addr.sin_addr), ntohs(source_addr.sin_port));
         printf("receive bytes length : \t%zd\n",recv_id);
         printf("receive data is \t%s\n",buffer);
-        printf("------------------------------------------\n");
+        printf("-----------------------------------------------------------------\n");
         printf("\n");
         printf("\n");
 
@@ -94,13 +94,13 @@ int main() {
         
         
 
-        printf("---------------sending----------------\n");
+        printf("-----------------------------sending-----------------------------\n");
         printf("index: %d\n",num);
         printf("my ip:               %s:%d\n",inet_ntoa(route_addr_02.sin_addr), ntohs(route_addr_02.sin_port));
             printf("target ip :          %s:%d\n",inet_ntoa(forward_addr.sin_addr), ntohs(forward_addr.sin_port));
             printf("send bytes length :  %zd\n",send_id);
             printf("send data is         %s\n",buffer);
-        printf("-----------------------------------------\n");
+        printf("-----------------------------------------------------------------\n");
         printf("\n");
         printf("\n");
 

@@ -7,8 +7,8 @@
 #include <netinet/in.h>  
 #include <arpa/inet.h>  
 
-#define recv_port 4445
-#define recv_ip "127.0.100.4"
+#define recv_port 8888
+#define recv_ip "127.0.100.5"
 
 
 int main()  

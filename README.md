@@ -1,25 +1,56 @@
-srsRAN
-======
+srsRAN UDP
+1.原理
+　IP:网卡IPv4（ifconfig） PORT：1111-8888
 
-[![Build Status](https://github.com/srsran/srsRAN_4G/actions/workflows/ccpp.yml/badge.svg?branch=master)](https://github.com/srsran/srsRAN_4G/actions/workflows/ccpp.yml)
-[![CodeQL](https://github.com/srsran/srsRAN_4G/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/srsran/srsRAN_4G/actions/workflows/codeql.yml)
-[![Coverity](https://scan.coverity.com/projects/28268/badge.svg)](https://scan.coverity.com/projects/srsran_4g_agpl)
 
-srsRAN is an open source 4G software radio suite developed by [SRS](http://www.srs.io). For 5G RAN, see our new O-RAN CU/DU solution - [srsRAN Project](https://www.github.com/srsran/srsran_project).
+2.UDP文件（可进行独立测试）
+编译
+cd srsRAN_2024
+g++ test_send.cc -o send
+g++ test_route.cc -o route
+g++ test_route_2.cc -o route_2
+g++ test_receive.cc -o rec
+运行（4个终端）
+cd srsRAN_2024
+./send
+./route
+./route_2
+./rec
 
-See the [srsRAN 4G project pages](https://www.srsran.com) for information, guides and project news.
+3.srsRAN+UDP
+编译srsRAN(第一次编译需新建build）
+cd srsRAN_2024
+bash ./complie.sh
 
-The srsRAN suite includes:
-  * srsUE - a full-stack SDR 4G UE application with prototype 5G features
-  * srsENB - a full-stack SDR 4G eNodeB application
-  * srsEPC - a light-weight 4G core network implementation with MME, HSS and S/P-GW
+编译UDP route
+cd srsRAN_2024
+g++ test_route.cc -o route
+g++ test_route_2.cc -o route_2
 
-For application features, build instructions and user guides see the [srsRAN 4G documentation](https://docs.srsran.com/projects/4g/).
+首先要运行UDP route
+cd srsRAN_2024
+./route
+第二个终端
+cd srsRAN_2024
+./route_2
 
-For license details, see LICENSE file.
+再运行srsRAN，不然会卡住
+cd srsRAN_2024
+sudo bash ./go.sh 
 
-Support
-=======
+手机连接上后，新开终端
+cd srsRAN_2024
+bash ./network.sh
 
-Mailing list: https://lists.srsran.com/mailman/listinfo/srsran-users
+运行截图
+srsepc
+
+srsenb
+
+
+route01
+
+
+route02
+
 
