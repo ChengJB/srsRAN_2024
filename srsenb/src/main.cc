@@ -48,7 +48,17 @@
 #include "srsenb/hdr/metrics_json.h"
 #include "srsenb/hdr/metrics_stdout.h"
 #include "srsran/common/enb_events.h"
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <string.h>  
+#include <unistd.h>  
+#include <sys/types.h>  
+#include <sys/socket.h>  
+#include <netinet/in.h>  
+#include <arpa/inet.h>  
 
+#define recv_port 4445
+#define recv_ip "127.0.100.4"
 using namespace std;
 using namespace srsenb;
 namespace bpo = boost::program_options;
@@ -717,14 +727,57 @@ int main(int argc, char* argv[])
   }
   int cnt    = 0;
   int ts_cnt = 0;
+
+//add UDP
+//创建套接字
+    int rec_sock=socket(AF_INET,SOCK_DGRAM,0);
+    //定义服务器地址
+    struct sockaddr_in rec_addr;
+    memset(&rec_addr,0,sizeof(rec_addr));
+    rec_addr.sin_family=AF_INET;
+    rec_addr.sin_addr.s_addr=inet_addr(recv_ip);
+    rec_addr.sin_port=htons(recv_port);
+    //绑定套接字
+    bind(rec_sock,(struct sockaddr*)&rec_addr,sizeof(rec_addr));
+    int num=0;
+    int print_num=0;
+
   while (running) {
-    if (args.general.print_buffer_state) {
+
+print_num++;
+if(print_num==100){
+        print_num=0;
+        struct sockaddr_in from_addr;
+        socklen_t len=sizeof(from_addr);  
+        char buffer[1500]="";
+        ssize_t rec_id=recvfrom(rec_sock,buffer,sizeof(buffer),0,(struct sockaddr*)&from_addr,&len);   
+        
+                
+        printf("---------------receiving----------------\n");
+        printf("index: %d\n",num);
+        printf("my ip:\t\t%s:%d\n",inet_ntoa(rec_addr.sin_addr), ntohs(rec_addr.sin_port));
+        printf("source ip :\t%s:%d\n",inet_ntoa(from_addr.sin_addr), ntohs(from_addr.sin_port));
+        printf("receive bytes length :\t%zd\n",rec_id);
+        printf("receive data is\t%s\n",buffer);
+        printf("------------------------------------------\n");
+        printf("\n");
+        printf("\n");
+       
+        num++;
+}
+   
+
+        
+ if (args.general.print_buffer_state) {
       cnt++;
       if (cnt == 1000) {
         cnt = 0;
         enb->print_pool();
       }
-    }
+
+
+   }
+   close(rec_sock);  
     if (stdout_ts_enable) {
       if (++ts_cnt == 100) {
         ts_cnt = 0;
