@@ -1,56 +1,73 @@
 srsRAN UDP
-1.Ô­Àí
-¡¡IP:Íø¿¨IPv4£¨ifconfig£© PORT£º1111-8888
+1.åŸç†
+ã€€																			IP:ç½‘å¡IPv4ï¼ˆifconfigï¼‰ PORTï¼š1111-8888
 
+![image-20240320225518607](C:\Users\ChengJiangBo\AppData\Roaming\Typora\typora-user-images\image-20240320225518607.png)
 
-2.UDPÎÄ¼ş£¨¿É½øĞĞ¶ÀÁ¢²âÊÔ£©
-±àÒë
+2.UDPæ–‡ä»¶ï¼ˆå¯è¿›è¡Œç‹¬ç«‹æµ‹è¯•ï¼‰
+ç¼–è¯‘
+
+```
 cd srsRAN_2024
 g++ test_send.cc -o send
 g++ test_route.cc -o route
 g++ test_route_2.cc -o route_2
 g++ test_receive.cc -o rec
-ÔËĞĞ£¨4¸öÖÕ¶Ë£©
+```
+
+
+è¿è¡Œï¼ˆ4ä¸ªç»ˆç«¯ï¼‰
+
+```
 cd srsRAN_2024
 ./send
 ./route
 ./route_2
 ./rec
+```
 
 3.srsRAN+UDP
-±àÒësrsRAN(µÚÒ»´Î±àÒëĞèĞÂ½¨build£©
+ç¼–è¯‘srsRAN(ç¬¬ä¸€æ¬¡ç¼–è¯‘éœ€æ–°å»ºbuildï¼‰
+
+```
 cd srsRAN_2024
 bash ./complie.sh
+```
 
-±àÒëUDP route
+ç¼–è¯‘UDP route
+
+```
 cd srsRAN_2024
 g++ test_route.cc -o route
 g++ test_route_2.cc -o route_2
+```
 
-Ê×ÏÈÒªÔËĞĞUDP route
+é¦–å…ˆè¦è¿è¡ŒUDP route
+
+```
 cd srsRAN_2024
 ./route
-µÚ¶ş¸öÖÕ¶Ë
+```
+
+
+ç¬¬äºŒä¸ªç»ˆç«¯
+
+```
 cd srsRAN_2024
 ./route_2
+```
 
-ÔÙÔËĞĞsrsRAN£¬²»È»»á¿¨×¡
+å†è¿è¡ŒsrsRAN
+
+```
 cd srsRAN_2024
 sudo bash ./go.sh 
+```
 
-ÊÖ»úÁ¬½ÓÉÏºó£¬ĞÂ¿ªÖÕ¶Ë
+æ‰‹æœºè¿æ¥ä¸Šåï¼Œæ–°å¼€ç»ˆç«¯
+
+```
 cd srsRAN_2024
 bash ./network.sh
-
-ÔËĞĞ½ØÍ¼
-srsepc
-
-srsenb
-
-
-route01
-
-
-route02
-
+```
 
