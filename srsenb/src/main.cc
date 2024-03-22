@@ -53,19 +53,18 @@ using namespace std;
 using namespace srsenb;
 namespace bpo = boost::program_options;
 
+// add udp
 
-//add udp
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-#include <stdio.h>  
-#include <stdlib.h>  
-#include <string.h>  
-#include <unistd.h>  
-#include <sys/types.h>  
-#include <sys/socket.h>  
-#include <netinet/in.h>  
-#include <arpa/inet.h>  
-
-#define SEND_PORT 1111  
+#define SEND_PORT 1111
 #define SEND_IP "10.24.145.5"
 
 #define END_PORT 2222
@@ -73,7 +72,6 @@ namespace bpo = boost::program_options;
 
 #define recv_port 8888
 #define recv_ip "10.24.145.5"
-
 
 /**********************************************************************
  *  Program arguments processing
@@ -739,83 +737,86 @@ int main(int argc, char* argv[])
   }
   int cnt    = 0;
   int ts_cnt = 0;
-  //add udp
+
+  //-----------------------------------------------------------------------------addUDP---------------------------------------------------------------------------------
+
+  // END senod to EPC
 
   // create socket
-            int send_sock=socket(AF_INET, SOCK_DGRAM, 0);
-            // bind  address
-            struct sockaddr_in send_addr;   
-            memset(&send_addr, 0,sizeof(send_addr));
-            send_addr.sin_family = AF_INET;
-            send_addr.sin_addr.s_addr = inet_addr(SEND_IP);
-            send_addr.sin_port = htons(SEND_PORT);
-            bind(send_sock, (struct sockaddr*)&send_addr, sizeof(send_addr));
-            //send data
-            struct sockaddr_in end_addr;   
-            memset(&end_addr, 0,sizeof(end_addr));
-            end_addr.sin_family = AF_INET;  
-            end_addr.sin_addr.s_addr = inet_addr(END_IP);  
-            end_addr.sin_port = htons(END_PORT);  
-            int num=0;
-            int send_interval=0;
-  //创建套接字
-    int rec_sock=socket(AF_INET,SOCK_DGRAM,0);
-    //定义服务器地址
-    struct sockaddr_in rec_addr;
-    memset(&rec_addr,0,sizeof(rec_addr));
-    rec_addr.sin_family=AF_INET;
-    rec_addr.sin_addr.s_addr=inet_addr(recv_ip);
-    rec_addr.sin_port=htons(recv_port);
-    //绑定套接字
-    bind(rec_sock,(struct sockaddr*)&rec_addr,sizeof(rec_addr));
-   
+  int send_sock = socket(AF_INET, SOCK_DGRAM, 0);
+  // bind  address
+  struct sockaddr_in send_addr;
+  memset(&send_addr, 0, sizeof(send_addr));
+  send_addr.sin_family      = AF_INET;
+  send_addr.sin_addr.s_addr = inet_addr(SEND_IP);
+  send_addr.sin_port        = htons(SEND_PORT);
+  bind(send_sock, (struct sockaddr*)&send_addr, sizeof(send_addr));
+  // send data
+  struct sockaddr_in end_addr;
+  memset(&end_addr, 0, sizeof(end_addr));
+  end_addr.sin_family      = AF_INET;
+  end_addr.sin_addr.s_addr = inet_addr(END_IP);
+  end_addr.sin_port        = htons(END_PORT);
+  //set sending data
+  char    send_data[] = "srsRAN ENB SEND TO EPC TEST";
 
+
+// receive data from EPC
+ 
+  // create socket
+  int rec_sock = socket(AF_INET, SOCK_DGRAM, 0);
+  //set receiving address
+  struct sockaddr_in rec_addr;
+  memset(&rec_addr, 0, sizeof(rec_addr));
+  rec_addr.sin_family      = AF_INET;
+  rec_addr.sin_addr.s_addr = inet_addr(recv_ip);
+  rec_addr.sin_port        = htons(recv_port);
+  // bind address
+  bind(rec_sock, (struct sockaddr*)&rec_addr, sizeof(rec_addr));
+  //sert from address
+struct sockaddr_in from_addr;
+  socklen_t          len          = sizeof(from_addr);
+  char               buffer[1500] = "";
+
+
+//set transmit number
+ int num                  = 0;
+ int send_interval        = 0;
+//-----------------------------------------------------------------------------addUDP---------------------------------------------------------------------------------
 
   while (running) {
-
-            send_interval++;
-            if(send_interval==100)
-            {
-              
-               char send_data[] = "srsRAN ENB SEND TO EPC TEST";
-            ssize_t send_id=sendto(send_sock, send_data, strlen(send_data), 0, (struct sockaddr*)&end_addr, sizeof(end_addr));
-            printf("-----------------------------sending-----------------------------\n");
-            printf("index: %d\n",num);
-            printf("my ip:               %s:%d\n",inet_ntoa(send_addr.sin_addr), ntohs(send_addr.sin_port));
-            printf("target ip :          %s:%d\n",inet_ntoa(end_addr.sin_addr), ntohs(end_addr.sin_port));
-            printf("send bytes length :  %zd\n",send_id);
-            printf("send data is         %s\n",send_data);
-            printf("-----------------------------------------------------------------\n");
-            printf("\n");
-            printf("\n");
-
-            struct sockaddr_in from_addr;
-        socklen_t len=sizeof(from_addr);  
-        char buffer[1500]="";
-        ssize_t rec_id=recvfrom(rec_sock,buffer,sizeof(buffer),0,(struct sockaddr*)&from_addr,&len);   
-        
-        
-        
-        printf("-----------------------------receiving---------------------------\n");
-        printf("index: %d\n",num);
-        printf("my ip:\t\t%s:%d\n",inet_ntoa(rec_addr.sin_addr), ntohs(rec_addr.sin_port));
-        printf("source ip :\t%s:%d\n",inet_ntoa(from_addr.sin_addr), ntohs(from_addr.sin_port));
-        printf("receive bytes length :\t%zd\n",rec_id);
-        printf("receive data is\t%s\n",buffer);
-        printf("-----------------------------------------------------------------\n");
-        printf("\n");
-        printf("\n");
+    send_interval++;
+    if (send_interval == 100) {
+      
+      ssize_t send_id =
+      sendto(send_sock, send_data, strlen(send_data), 0, (struct sockaddr*)&end_addr, sizeof(end_addr));
+      printf("-----------------------------sending-----------------------------\n");
+      printf("index: %d\n", num);
+      printf("my ip:               %s:%d\n", inet_ntoa(send_addr.sin_addr), ntohs(send_addr.sin_port));
+      printf("target ip :          %s:%d\n", inet_ntoa(end_addr.sin_addr), ntohs(end_addr.sin_port));
+      printf("send bytes length :  %zd\n", send_id);
+      printf("send data is         %s\n", send_data);
+      printf("-----------------------------------------------------------------\n");
+      printf("\n");
+      printf("\n");
 
 
+      
+      ssize_t     rec_id = recvfrom(rec_sock, buffer, sizeof(buffer), 0, (struct sockaddr*)&from_addr, &len);
 
+      printf("-----------------------------receiving---------------------------\n");
+      printf("index: %d\n", num);
+      printf("my ip:\t\t%s:%d\n", inet_ntoa(rec_addr.sin_addr), ntohs(rec_addr.sin_port));
+      printf("source ip :\t%s:%d\n", inet_ntoa(from_addr.sin_addr), ntohs(from_addr.sin_port));
+      printf("receive bytes length :\t%zd\n", rec_id);
+      printf("receive data is\t%s\n", buffer);
+      printf("-----------------------------------------------------------------\n");
+      printf("\n");
+      printf("\n");
 
-            num++;
-            send_interval=0;
-            }
-           
-
-
-
+      num++;
+      send_interval = 0;
+    }
 
     if (args.general.print_buffer_state) {
       cnt++;

@@ -10,10 +10,10 @@
 
 
 #define SEND_PORT 1111  
-#define SEND_IP "127.0.100.1"
+#define SEND_IP "10.24.145.5"
 
 #define END_PORT 2222
-#define END_IP "127.0.100.2"
+#define END_IP "10.24.145.5"
 
 int main(){
             // create socket
