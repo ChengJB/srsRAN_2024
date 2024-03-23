@@ -538,7 +538,7 @@ int num=0;
   
   while (running) {
 
-  
+  /*
 //receive data         
 ssize_t rec_id=recvfrom(rec_sock,buffer,sizeof(buffer),0,(struct sockaddr*)&from_addr,&len);         
 printf("-----------------------------receiving---------------------------\n");
@@ -565,7 +565,7 @@ printf("-----------------------------------------------------------------\n");
 printf("\n");
 printf("\n");
 num++;
-
+*/
 
 sleep(1);
           

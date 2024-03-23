@@ -785,6 +785,7 @@ struct sockaddr_in from_addr;
 //-----------------------------------------------------------------------------addUDP---------------------------------------------------------------------------------
 
   while (running) {
+    /*
     send_interval++;
     if (send_interval == 100) {
       
@@ -816,7 +817,7 @@ struct sockaddr_in from_addr;
 
       num++;
       send_interval = 0;
-    }
+    }*/
 
     if (args.general.print_buffer_state) {
       cnt++;

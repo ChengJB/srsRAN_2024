@@ -1,0 +1,32 @@
+2024-03-22T09:55:07.913060 [ENB    ] [I] Using binary srsenb with arguments: enb.conf 
+2024-03-22T09:55:07.939358 [ENB    ] [I] Built in Release mode using 23.04.0.
+2024-03-22T09:55:07.975124 [COMN   ] [D] [    0] Opened SCTP socket=7
+2024-03-22T09:55:07.975129 [COMN   ] [D] [    0] Setting RTO_INFO options on SCTP socket. Association 0, Initial RTO 3000, Minimum RTO 1000, Maximum RTO 6000
+2024-03-22T09:55:07.975130 [COMN   ] [D] [    0] Setting SCTP_INITMSG options on SCTP socket. Max attempts 3, Max init attempts timeout 5000
+2024-03-22T09:55:07.975131 [COMN   ] [D] [    0] Successfully bound to address 127.0.0.2:2152
+2024-03-22T09:55:07.975143 [COMN   ] [D] [    0] RxSockets: socket fd=6 has been registered.
+2024-03-22T09:55:07.975151 [COMN   ] [D] [    0] Successfully bound to address 127.0.0.2:0
+2024-03-22T09:55:07.976941 [COMN   ] [D] [    0] RxSockets: socket fd=7 has been registered.
+2024-03-22T09:56:45.869483 [RLC    ] [W] DRB1: Lost PDU SN=830
+2024-03-22T09:56:47.989565 [RLC    ] [W] DRB1: Lost PDU SN=848
+2024-03-22T09:56:52.025842 [RLC    ] [W] DRB1: Lost PDU SN=945
+2024-03-22T09:56:52.025843 [RLC    ] [W] DRB1: Dropping PDU 946 during last segment handling due to lost start segment
+2024-03-22T09:56:52.025844 [RLC    ] [W] DRB1: Dropping PDU 947 during last segment handling due to lost start segment
+2024-03-22T09:57:08.688491 [COMN   ] [D] [    0] RxSockets: Socket fd=7 has been successfully removed
+2024-03-22T09:57:08.688494 [COMN   ] [D] [    0] RxSockets: Socket fd=7 has been successfully removed
+2024-03-22T09:57:08.688505 [COMN   ] [D] [    0] Socket=7 was closed.
+2024-03-22T09:57:08.688548 [COMN   ] [D] [    0] Opened SCTP socket=7
+2024-03-22T09:57:08.688560 [COMN   ] [D] [    0] Setting RTO_INFO options on SCTP socket. Association 0, Initial RTO 3000, Minimum RTO 1000, Maximum RTO 6000
+2024-03-22T09:57:08.688562 [COMN   ] [D] [    0] Setting SCTP_INITMSG options on SCTP socket. Max attempts 3, Max init attempts timeout 5000
+2024-03-22T09:57:08.688575 [COMN   ] [D] [    0] Successfully bound to address 127.0.0.2:0
+2024-03-22T09:57:08.688613 [COMN   ] [I] [    0] Failed to establish socket connection to 127.0.0.1
+2024-03-22T09:57:08.688627 [COMN   ] [W] [    0] RxSockets: The socket fd=7 to be removed does not exist
+2024-03-22T09:57:08.688631 [COMN   ] [D] [    0] Socket=7 was closed.
+2024-03-22T09:57:08.747375 [MAC    ] [W] [ 5690] UE buffers: Removing old buffer tti=5685, interval=13
+2024-03-22T09:57:08.748445 [MAC    ] [W] [ 5691] UE buffers: Removing old buffer tti=5686, interval=13
+2024-03-22T09:57:08.860439 [RRC    ] [E] MME isn't connected. Sending Connection Reject
+2024-03-22T09:57:11.173147 [COMN   ] [D] [    0] RxSockets: Closing rx socket handler thread
+2024-03-22T09:57:11.173724 [COMN   ] [D] [    0] RxSockets: closed.
+2024-03-22T09:57:11.173726 [COMN   ] [D] [    0] Socket=-1 could not be closed.
+2024-03-22T09:57:11.175452 [COMN   ] [D] [    0] Socket=-1 could not be closed.
+2024-03-22T09:57:11.176075 [COMN   ] [D] [    0] Socket=-1 could not be closed.

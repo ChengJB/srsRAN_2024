@@ -1,0 +1,17 @@
+sctp_recvmsg in epc mme.cc run_thread() 0 
+sctp_send in srsepc s1ap.cc 
+sctp_recvmsg in epc mme.cc run_thread() 0 
+sctp_send in srsepc s1ap.cc 
+sctp_recvmsg in epc mme.cc run_thread() 0 
+sctp_send in srsepc s1ap.cc 
+sctp_recvmsg in epc mme.cc run_thread() 0 
+sctp_send in srsepc s1ap.cc 
+sctp_recvmsg in epc mme.cc run_thread() 0 
+sctp_send in srsepc s1ap.cc 
+sctp_recvmsg in epc mme.cc run_thread() 0 
+sctp_send in srsepc s1ap.cc 
+sctp_recvmsg in epc mme.cc run_thread() 0 
+sctp_recvmsg in epc mme.cc run_thread() 0 
+sctp_recvmsg in epc mme.cc run_thread() 0 
+sctp_send in srsepc s1ap.cc 
+

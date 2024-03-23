@@ -645,7 +645,7 @@ bool ngap::send_error_indication(const asn1::ngap::cause_c& cause,
 
   container->cause_present = true;
   container->cause.value   = cause;
-
+     //printf("stcp_send: 31 \n");
   return sctp_send_ngap_pdu(tx_pdu, rnti, "Error Indication");
 }
 /*******************************************************************************
@@ -745,7 +745,7 @@ bool ngap::setup_ng()
     }
   }
   container->default_paging_drx.value.value = asn1::ngap::paging_drx_opts::v256; // Todo: add to args, config file
-
+     //printf("stcp_send: 33\n");
   return sctp_send_ngap_pdu(pdu, 0, "ngSetupRequest");
 }
 
@@ -784,7 +784,7 @@ bool ngap::sctp_send_ngap_pdu(const asn1::ngap::ngap_pdu_c& tx_pdu, uint32_t rnt
   }
 
   uint16_t streamid = rnti == SRSRAN_INVALID_RNTI ? NONUE_STREAM_ID : users.find_ue_rnti(rnti)->stream_id;
-
+     //printf("stcp_send: 34 \n");
   ssize_t n_sent = sctp_sendmsg(amf_socket.fd(),
                                 buf->msg,
                                 buf->N_bytes,

@@ -98,7 +98,7 @@ bool ngap::ue::send_initial_ue_message(asn1::ngap::rrcestablishment_cause_e caus
   // UE context request for setup in the NAS registration request
   container->ue_context_request_present = true;
   container->ue_context_request.value   = asn1::ngap::ue_context_request_opts::options::requested;
-
+     //printf("stcp_send: 25 \n");
   return ngap_ptr->sctp_send_ngap_pdu(tx_pdu, ctxt.rnti, "InitialUEMessage");
 }
 
@@ -135,7 +135,7 @@ bool ngap::ue::send_ul_nas_transport(srsran::const_byte_span pdu)
   container->user_location_info.value.user_location_info_nr().nr_cgi.plmn_id   = ngap_ptr->nr_cgi.plmn_id;
   container->user_location_info.value.user_location_info_nr().tai.plmn_id      = ngap_ptr->tai.plmn_id;
   container->user_location_info.value.user_location_info_nr().tai.tac          = ngap_ptr->tai.tac;
-
+     //printf("stcp_send: 26 \n");
   return ngap_ptr->sctp_send_ngap_pdu(tx_pdu, ctxt.rnti, "UplinkNASTransport");
 }
 
@@ -160,7 +160,7 @@ bool ngap::ue::send_initial_ctxt_setup_response()
 
   // RAN UE NGAP ID
   container->ran_ue_ngap_id.value = ctxt.ran_ue_ngap_id;
-
+     //printf("stcp_send: 27 \n");
   return ngap_ptr->sctp_send_ngap_pdu(tx_pdu, ctxt.rnti, "InitialContextSetupResponse");
 }
 
@@ -226,6 +226,7 @@ bool ngap::ue::send_pdu_session_resource_setup_response(uint16_t                
   su_res.pdu_session_res_setup_resp_transfer.resize(bref.distance_bytes());
 
   container->pdu_session_res_setup_list_su_res.value.push_back(su_res);
+      // printf("stcp_send: 28 \n");
   return ngap_ptr->sctp_send_ngap_pdu(tx_pdu, ctxt.rnti, "PDUSessionResourceSetupResponse");
 }
 
@@ -249,7 +250,7 @@ bool ngap::ue::send_ue_ctxt_release_complete()
 
   container->ran_ue_ngap_id.value = ctxt.ran_ue_ngap_id;
   container->amf_ue_ngap_id.value = ctxt.amf_ue_ngap_id.value();
-
+     //printf("stcp_send: 29 \n");
   return ngap_ptr->sctp_send_ngap_pdu(tx_pdu, ctxt.rnti, "UEContextReleaseComplete");
 }
 
@@ -292,6 +293,7 @@ bool ngap::ue::send_ue_context_release_request(asn1::ngap::cause_c cause)
   container->amf_ue_ngap_id.value = ctxt.amf_ue_ngap_id.value();
 
   // TODO: Implement timeout
+       //printf("stcp_send: 30 \n");
   return ngap_ptr->sctp_send_ngap_pdu(tx_pdu, ctxt.rnti, "UEContextReleaseRequest");
 }
 

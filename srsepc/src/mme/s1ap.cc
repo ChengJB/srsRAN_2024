@@ -214,7 +214,7 @@ bool s1ap::s1ap_tx_pdu(const asn1::s1ap::s1ap_pdu_c& pdu, struct sctp_sndrcvinfo
     return false;
   }
   buf->N_bytes = bref.distance_bytes();
-
+     //printf("stcp_send: 24 \n");
   ssize_t n_sent = sctp_send(m_s1mme, buf->msg, buf->N_bytes, enb_sri, MSG_NOSIGNAL);
   if (n_sent == -1) {
     srsran::console("Failed to send S1AP PDU. Error: %s\n", strerror(errno));

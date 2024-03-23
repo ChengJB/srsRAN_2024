@@ -112,9 +112,13 @@ int test_socket_handler()
                                   NONUE_STREAM_ID,
                                   0,
                                   0);
+     // printf("stcp_send: 1 \n");
+
     TESTASSERT(n_sent >= 0);
     usleep(1000);
     logger.info("Message %d sent.", i);
+
+  
   }
 
   uint32_t time_elapsed = 0;

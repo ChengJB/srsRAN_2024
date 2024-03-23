@@ -1,0 +1,25 @@
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+sctp_sendmsg in s1ap::sctp_send_s1ap_pdu
+sctp_recvmsg in sctp_recvmsg_pdu_task operator
+:wq
+

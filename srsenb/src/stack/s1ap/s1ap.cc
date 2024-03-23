@@ -607,7 +607,7 @@ bool s1ap::setup_s1()
   container->supported_tas.value[0].broadcast_plmns[0][2] = ((uint8_t*)&plmn)[3];
 
   container->default_paging_drx.value.value = asn1::s1ap::paging_drx_opts::v128; // Todo: add to args, config file
-
+     //printf("stcp_send: 2 \n");
   return sctp_send_s1ap_pdu(pdu, 0, "s1SetupRequest");
 }
 
@@ -1278,6 +1278,7 @@ void s1ap::send_ho_failure(uint32_t mme_ue_s1ap_id, const asn1::s1ap::cause_c& c
   container->cause.value          = cause;
 
   sctp_send_s1ap_pdu(tx_pdu, SRSRAN_INVALID_RNTI, "HandoverFailure");
+    //   printf("stcp_send: 3 \n");
 }
 
 bool s1ap::send_ho_req_ack(const asn1::s1ap::ho_request_s&                msg,
@@ -1351,7 +1352,7 @@ bool s1ap::send_ho_req_ack(const asn1::s1ap::ho_request_s&                msg,
   }
   container->target_to_source_transparent_container.value.resize(bref.distance_bytes());
   memcpy(container->target_to_source_transparent_container.value.data(), pdu->msg, bref.distance_bytes());
-
+     //printf("stcp_send: 4 \n");
   return sctp_send_s1ap_pdu(tx_pdu, rnti, "HandoverRequestAcknowledge");
 }
 
@@ -1387,6 +1388,7 @@ void s1ap::send_ho_notify(uint16_t rnti, uint64_t target_eci)
   container->tai.value = tai;
 
   sctp_send_s1ap_pdu(tx_pdu, rnti, "HandoverNotify");
+     //  printf("stcp_send: 5 \n");
 }
 
 void s1ap::send_ho_cancel(uint16_t rnti, const asn1::s1ap::cause_c& cause)
@@ -1446,7 +1448,7 @@ bool s1ap::send_error_indication(const asn1::s1ap::cause_c& cause,
 
   container->cause_present = true;
   container->cause.value   = cause;
-
+     //printf("stcp_send: 6 \n");
   return sctp_send_s1ap_pdu(tx_pdu, rnti, "Error Indication");
 }
 
@@ -1490,7 +1492,7 @@ bool s1ap::ue::send_initialuemessage(asn1::s1ap::rrc_establishment_cause_e cause
 
   // RRC Establishment Cause
   container->rrc_establishment_cause.value = cause;
-
+     //printf("stcp_send: 7 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "InitialUEMessage");
 }
 
@@ -1516,7 +1518,7 @@ bool s1ap::ue::send_ulnastransport(srsran::unique_byte_buffer_t pdu)
 
   // TAI
   container->tai.value = s1ap_ptr->tai;
-
+     //printf("stcp_send: 8 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "UplinkNASTransport");
 }
 
@@ -1552,8 +1554,9 @@ bool s1ap::ue::send_uectxtreleaserequest(const cause_c& cause)
 
   // Cause
   container->cause.value = cause;
-
+     //printf("stcp_send: 9 \n");
   release_requested = s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "UEContextReleaseRequest");
+
   if (not release_requested) {
     s1ap_ptr->rrc->release_ue(ctxt.rnti);
     s1ap_ptr->users.erase(this);
@@ -1583,7 +1586,7 @@ bool s1ap::ue::send_uectxtreleasecomplete()
 
   // Log event.
   event_logger::get().log_s1_ctx_delete(ctxt.enb_cc_idx, ctxt.mme_ue_s1ap_id.value(), ctxt.enb_ue_s1ap_id, ctxt.rnti);
-
+     //printf("stcp_send: 10 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "UEContextReleaseComplete");
 }
 
@@ -1624,6 +1627,7 @@ void s1ap::ue::ue_ctxt_setup_complete()
                      ctxt.rnti);
       container->cause.value.set_misc().value = cause_misc_opts::unspecified;
     }
+        // printf("stcp_send: 11 \n");
     s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "UEContextModificationFailure");
     return;
   }
@@ -1653,7 +1657,7 @@ void s1ap::ue::ue_ctxt_setup_complete()
 
   // Log event.
   event_logger::get().log_s1_ctx_create(ctxt.enb_cc_idx, ctxt.mme_ue_s1ap_id.value(), ctxt.enb_ue_s1ap_id, ctxt.rnti);
-
+     //printf("stcp_send: 12 \n");
   s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "InitialContextSetupResponse");
 }
 
@@ -1683,7 +1687,7 @@ bool s1ap::ue::send_erab_setup_response(const erab_id_list& erabs_setup, const e
       get_erab_addr(item.erab_id, item.transport_layer_address, item.gtp_teid);
     }
   }
-
+     //printf("stcp_send: 13 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "E_RABSetupResponse");
 }
 
@@ -1699,7 +1703,7 @@ bool s1ap::ue::send_uectxtmodifyresp()
 
   container->enb_ue_s1ap_id.value = ctxt.enb_ue_s1ap_id;
   container->mme_ue_s1ap_id.value = ctxt.mme_ue_s1ap_id.value();
-
+     //printf("stcp_send: 14 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "UEContextModificationResponse");
 }
 
@@ -1716,7 +1720,7 @@ bool s1ap::ue::send_uectxtmodifyfailure(const cause_c& cause)
   container->enb_ue_s1ap_id.value = ctxt.enb_ue_s1ap_id;
   container->mme_ue_s1ap_id.value = ctxt.mme_ue_s1ap_id.value();
   container->cause.value          = cause;
-
+     //printf("stcp_send: 15 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "UEContextModificationFailure");
 }
 
@@ -1753,7 +1757,7 @@ bool s1ap::ue::send_erab_release_response(const erab_id_list& erabs_released, co
     container->erab_failed_to_release_list_present = true;
     fill_erab_failed_setup_list(container->erab_failed_to_release_list.value, erabs_failed);
   }
-
+     //printf("stcp_send: 16 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "E-RABReleaseResponse");
 }
 
@@ -1782,7 +1786,7 @@ bool s1ap::ue::send_erab_modify_response(const erab_id_list& erabs_modified, con
     container->erab_failed_to_modify_list_present = true;
     fill_erab_failed_setup_list(container->erab_failed_to_modify_list.value, erabs_failed);
   }
-
+     ///printf("stcp_send: 17 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "E-RABModifyResponse");
 }
 
@@ -1806,7 +1810,7 @@ bool s1ap::ue::send_erab_release_indication(const std::vector<uint16_t>& erabs_s
     container->erab_released_list.value[i].load_info_obj(ASN1_S1AP_ID_ERAB_ITEM);
     container->erab_released_list.value[i]->erab_item().erab_id = erabs_successfully_released[i];
   }
-
+     //printf("stcp_send: 18 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "E-RABReleaseIndication");
 }
 
@@ -1821,7 +1825,7 @@ bool s1ap::ue::send_ue_cap_info_indication(srsran::unique_byte_buffer_t ue_radio
 
   container->ue_radio_cap.value.resize(ue_radio_cap->N_bytes);
   memcpy(container->ue_radio_cap.value.data(), ue_radio_cap->msg, ue_radio_cap->N_bytes);
-
+     //printf("stcp_send: 19 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "UECapabilityInfoIndication");
 }
 
@@ -1839,7 +1843,7 @@ void s1ap::ue::send_ho_cancel(const asn1::s1ap::cause_c& cause)
   container->mme_ue_s1ap_id.value = ctxt.mme_ue_s1ap_id.value();
   container->enb_ue_s1ap_id.value = ctxt.enb_ue_s1ap_id;
   container->cause.value          = cause;
-
+     //printf("stcp_send: 20 \n");
   s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "HandoverCancel");
 }
 
@@ -2031,7 +2035,7 @@ bool s1ap::sctp_send_s1ap_pdu(const asn1::s1ap::s1ap_pdu_c& tx_pdu, uint32_t rnt
     logger.info(buf->msg, buf->N_bytes, "Tx S1AP SDU, %s", procedure_name);
   }
   uint16_t streamid = rnti == SRSRAN_INVALID_RNTI ? NONUE_STREAM_ID : users.find_ue_rnti(rnti)->stream_id;
-
+     //printf("stcp_send: 21 \n");
   ssize_t n_sent = sctp_sendmsg(mme_socket.fd(),
                                 buf->msg,
                                 buf->N_bytes,
@@ -2257,6 +2261,7 @@ bool s1ap::ue::send_ho_required(uint32_t                     target_eci,
   memcpy(container->source_to_target_transparent_container.value.data(), buffer->msg, bref.distance_bytes());
 
   // Send to HandoverRequired message to MME
+       //printf("stcp_send: 22 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "Handover Required");
 }
 
@@ -2292,7 +2297,7 @@ bool s1ap::ue::send_enb_status_transfer_proc(std::vector<bearer_status_info>& be
     //    asn1bearer.to_json(jw);
     //    printf("Bearer to add %s", jw.to_string().c_str());
   }
-
+     //printf("stcp_send: 23 \n");
   return s1ap_ptr->sctp_send_s1ap_pdu(tx_pdu, ctxt.rnti, "ENBStatusTransfer");
 }
 

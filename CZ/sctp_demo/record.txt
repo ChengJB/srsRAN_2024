@@ -1,0 +1,26 @@
+epc:
+start sctp listen port in 36412
+socket_id:m_s1mme => send to enb 
+socket_id:s1mme => recv from enb
+
+my_sctp:
+epc 36412 <===> 0 **sctp** 6000  0 <===> enb
+1. sctp
+2. center => epc & center listen on 6000
+3. enb => center
+
+now:
+epc 36412 <===>  0 enb
+
+enb: 
+sctp_sendmsg bind to mme_socket
+others is sctp_send_s1ap_pdu()
+
+
+----------------------------------------------------
+send:
+sctp_send() => only for epc => enb
+sctp_sendmsg() => only for enb => epc
+
+receieve:
+sctp_recvmsg()

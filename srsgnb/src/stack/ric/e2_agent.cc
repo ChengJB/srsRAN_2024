@@ -248,6 +248,7 @@ void e2_agent::run_thread()
 bool e2_agent::send_sctp(srsran::unique_byte_buffer_t& buf)
 {
   ssize_t ret;
+      // printf("stcp_send: 35 \n");
   ret = sctp_sendmsg(ric_socket.fd(),
                      buf->msg,
                      buf->N_bytes,
