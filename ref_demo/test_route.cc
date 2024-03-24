@@ -12,9 +12,6 @@
 #define ROUTE_PORT 2222  
 #define ROUTE_IP "10.24.145.5"  
 
-#define ROUTE_PORT_2 3333
-#define ROUTE_IP_2 "10.24.145.5"
-
 #define DESTINATION_IP "10.24.145.5"  
 #define DESTINATION_PORT 4444
 
@@ -78,22 +75,10 @@ int main() {
 
 
 
-
-
-
-
-
-
-
-
-
         // 转发数据  
          ssize_t  send_id=sendto(forward_sock, buffer, recv_id, 0, (struct sockaddr*)&forward_addr, sizeof(forward_addr));
         
   
-        
-        
-
         printf("-----------------------------sending-----------------------------\n");
         printf("index: %d\n",num);
         printf("my ip:               %s:%d\n",inet_ntoa(route_addr_02.sin_addr), ntohs(route_addr_02.sin_port));

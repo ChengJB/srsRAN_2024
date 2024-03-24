@@ -143,6 +143,7 @@ public:
     if (sendto(sock_fd, buffer, len, 0, (struct sockaddr*)&client_addr, sizeof(client_addr)) == -1) {
       logger.error("Error sending message to tester.");
     }
+        printf("client_addr_test IP = %s, Port = %d \n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
   }
 
   ///< Set socket to non-blocking-mode

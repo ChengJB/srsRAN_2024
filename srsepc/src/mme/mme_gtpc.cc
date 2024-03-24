@@ -97,6 +97,7 @@ bool mme_gtpc::send_s11_pdu(const srsran::gtpc_pdu& pdu)
   // TODO Add GTP-C serialization code
   // Send S11 message to SPGW
   n = sendto(m_s11, &pdu, sizeof(pdu), 0, (const sockaddr*)&m_spgw_addr, sizeof(m_spgw_addr));
+  //printf("m_spgw_addr IP = %s, Port = %d \n", inet_ntoa(m_spgw_addr.sin_addr), ntohs(m_spgw_addr.sin_port));
   if (n < 0) {
     m_logger.error("Error sending to socket. Error %s", strerror(errno));
     srsran::console("Error sending to socket. Error %s\n", strerror(errno));

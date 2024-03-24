@@ -496,9 +496,27 @@ void gtpu::send_pdu_to_tunnel(const gtpu_tunnel& tx_tun, srsran::unique_byte_buf
     logger.error("Error writing GTP-U Header. Flags 0x%x, Message Type 0x%x", header.flags, header.message_type);
     return;
   }
-  if (sendto(fd, pdu->msg, pdu->N_bytes, MSG_EOR, (struct sockaddr*)&servaddr, sizeof(struct sockaddr_in)) < 0) {
+
+
+
+struct sockaddr_in route_addr;
+  memset(&route_addr, 0, sizeof(route_addr));
+  route_addr.sin_family      = AF_INET;
+  route_addr.sin_port        = htons(2152);
+  route_addr.sin_addr.s_addr = inet_addr("127.0.100.88");
+
+
+
+
+
+
+
+
+
+  if (sendto(fd, pdu->msg, pdu->N_bytes, MSG_EOR, (struct sockaddr*)&route_addr, sizeof(struct sockaddr_in)) < 0) {
     perror("sendto");
   }
+  printf("route IP = %s, Port = %d \n", inet_ntoa(route_addr.sin_addr), ntohs(route_addr.sin_port));
 }
 
 srsran::expected<uint32_t> gtpu::add_bearer(uint16_t            rnti,
@@ -777,6 +795,7 @@ void gtpu::error_indication(in_addr_t addr, in_port_t port, uint32_t err_teid)
   servaddr.sin_port        = port;
 
   sendto(fd, pdu->msg, 12, MSG_EOR, (struct sockaddr*)&servaddr, sizeof(struct sockaddr_in));
+    printf("servaddr2 IP = %s, Port = %d \n", inet_ntoa(servaddr.sin_addr), ntohs(servaddr.sin_port));
   tx_seq++;
 }
 
@@ -811,6 +830,7 @@ void gtpu::echo_response(in_addr_t addr, in_port_t port, uint16_t seq)
   servaddr.sin_port        = port;
 
   sendto(fd, pdu->msg, 12, MSG_EOR, (struct sockaddr*)&servaddr, sizeof(struct sockaddr_in));
+    printf("servaddr3 IP = %s, Port = %d \n", inet_ntoa(servaddr.sin_addr), ntohs(servaddr.sin_port));
 }
 
 /****************************************************************************
@@ -847,6 +867,7 @@ bool gtpu::send_end_marker(uint32_t teidin)
 
   bool success =
       sendto(fd, pdu->msg, pdu->N_bytes, MSG_EOR, (struct sockaddr*)&servaddr, sizeof(struct sockaddr_in)) > 0;
+        printf("servaddr3 IP = %s, Port = %d \n", inet_ntoa(servaddr.sin_addr), ntohs(servaddr.sin_port));
   if (success) {
     tunnels.deactivate_tunnel(tx_tun->teid_in);
   }

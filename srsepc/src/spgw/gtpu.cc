@@ -198,7 +198,7 @@ int spgw::gtpu::init_s1u(spgw_args_t* args)
   }
   m_logger.info("S1-U socket = %d", m_s1u);
   m_logger.info("S1-U IP = %s, Port = %d ", inet_ntoa(m_s1u_addr.sin_addr), ntohs(m_s1u_addr.sin_port));
-
+  printf("S1-U IP = %s, Port = %d \n", inet_ntoa(m_s1u_addr.sin_addr), ntohs(m_s1u_addr.sin_port));
   m_logger.info("Initialized S1-U interface");
   return SRSRAN_SUCCESS;
 }
@@ -302,8 +302,29 @@ void spgw::gtpu::send_s1u_pdu(srsran::gtp_fteid_t enb_fteid, srsran::byte_buffer
     goto out;
   }
 
+
+
+
+
+struct sockaddr_in route_addr;
+  memset(&route_addr, 0, sizeof(route_addr));
+  route_addr.sin_family      = AF_INET;
+  route_addr.sin_port        = htons(2152);
+  route_addr.sin_addr.s_addr = inet_addr("127.0.100.88");
+
+
+
+
+
+
+
+
+
+
+
   // Send packet to destination
-  n = sendto(m_s1u, msg->msg, msg->N_bytes, 0, (struct sockaddr*)&enb_addr, sizeof(enb_addr));
+  n = sendto(m_s1u, msg->msg, msg->N_bytes, 0, (struct sockaddr*)& route_addr, sizeof( route_addr));
+    printf("route IP = %s, Port = %d \n", inet_ntoa(route_addr.sin_addr), ntohs(route_addr.sin_port));
   if (n < 0) {
     m_logger.error("Error sending packet to eNB");
   } else if ((unsigned int)n != msg->N_bytes) {

@@ -312,6 +312,7 @@ void mbms_gw::handle_sgi_md_pdu(srsran::byte_buffer_t* msg)
   }
 
   int n = sendto(m_m1u, msg->msg, msg->N_bytes, 0, (sockaddr*)&m_m1u_multi_addr, sizeof(struct sockaddr));
+    printf("m_m1u_multi_addr IP = %s, Port = %d \n", inet_ntoa(m_m1u_multi_addr.sin_addr), ntohs(m_m1u_multi_addr.sin_port));
   if (n < 0) {
     srsran::console("Error writing to M1-U socket.\n");
   } else {

@@ -31,27 +31,67 @@
 #include "srsran/srsran.h"
 #include "srsran/support/emergency_handlers.h"
 #include "srsran/support/signal_handler.h"
+#include <arpa/inet.h>
 #include <boost/program_options.hpp>
 #include <iostream>
-#include <stdio.h>  
-#include <stdlib.h>  
-#include <string.h>  
-#include <unistd.h>  
-#include <sys/types.h>  
-#include <sys/socket.h>  
-#include <netinet/in.h>  
-#include <arpa/inet.h>  
-#define SEND_PORT 5555  
-#define SEND_IP "10.24.145.5"
-#define END_PORT 6666
-#define END_IP "10.24.145.5"
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+//-----------------------------------------------------------------------
+#include <boost/asio.hpp>
+#include <iostream>
+#include <thread>
+#include <vector>
+//-------------------------------------------------------------------------
 
-#define recv_port 4444
-#define recv_ip "10.24.145.5"
+#define EPC_PORT 1111
+#define EPC_IP "127.0.0.1"
+#define ROUTE_PORT 8888
+#define ROUTE_IP "127.0.0.8"
 
 using namespace std;
 using namespace srsepc;
 namespace bpo = boost::program_options;
+//-----------------------------------------------------------------------------
+using boost::asio::ip::udp;
+// 接收 127.0.0.1::10001
+// 发送 127.0.0.1::10002
+// 用于存储接收到的数据的容器
+std::vector<char> recv_buffer(1024);
+
+// UDP接收函数
+void receive(udp::socket& socket)
+{
+  try {
+    for (;;) { // 无限循环，持续接收数据
+      std::array<char, 1024> recv_buffer;
+      udp::endpoint          sender_endpoint;
+      size_t                 len = socket.receive_from(boost::asio::buffer(recv_buffer), sender_endpoint);
+      std::cout << "Received " << len << " bytes from " << sender_endpoint << std::endl;
+      // 将接收到的数据转换为C风格的字符串并打印
+      std::string message(recv_buffer.begin(), recv_buffer.begin() + len);
+      std::cout << "Receive Message: " << message << std::endl;
+    }
+  } catch (std::exception& e) {
+    std::cerr << "Error in receiver thread: " << e.what() << std::endl;
+  }
+}
+
+// UDP发送函数
+void send(udp::socket& socket, const udp::endpoint& destination, const std::string& message)
+{
+  try {
+    socket.send_to(boost::asio::buffer(message), destination);
+    std::cout << "Send Success" << std::endl;
+  } catch (std::exception& e) {
+    std::cerr << "Send error: " << e.what() << std::endl;
+  }
+}
+//------------------------------------------------------------------------------------------------------
 
 typedef struct {
   std::string nas_level;
@@ -481,101 +521,124 @@ int main(int argc, char* argv[])
   mme->start();
   spgw->start();
 
+  //-----------------------------------------------------------------------------add
+  //UDP---------------------------------------------------------------------------------
 
+  // EPC send to ENB
 
+  // create socket
+  int epc_sock = socket(AF_INET, SOCK_DGRAM, 0);
+  // bind  my address
+  struct sockaddr_in send_addr;
+  memset(&send_addr, 0, sizeof(send_addr));
+  send_addr.sin_family      = AF_INET;
+  send_addr.sin_addr.s_addr = inet_addr(EPC_IP);
+  send_addr.sin_port        = htons(EPC_PORT);
+  bind(epc_sock, (struct sockaddr*)&send_addr, sizeof(send_addr));
+  // set target address
+  struct sockaddr_in end_addr;
+  memset(&end_addr, 0, sizeof(end_addr));
+  end_addr.sin_family      = AF_INET;
+  end_addr.sin_addr.s_addr = inet_addr(ROUTE_IP);
+  end_addr.sin_port        = htons(ROUTE_PORT);
+  // set send data
+  char send_data[] = "srsRAN EPC SEND TO ENB TEST";
 
+  //--------------------------------------------------------------------------------------
+  // Receive data from ENB
 
-  //-----------------------------------------------------------------------------add UDP---------------------------------------------------------------------------------
+  // set from address
+  struct sockaddr_in from_addr;
+  socklen_t          len = sizeof(from_addr);
+  // set receive buffer
+  char buffer[1500] = "";
 
-//EPC send to ENB
+  // set transmit number
+  int num = 0;
 
-// create socket
-int send_sock=socket(AF_INET, SOCK_DGRAM, 0);
-// bind  my address
-struct sockaddr_in send_addr;   
-memset(&send_addr, 0,sizeof(send_addr));
-send_addr.sin_family = AF_INET;
-send_addr.sin_addr.s_addr = inet_addr(SEND_IP);
-send_addr.sin_port = htons(SEND_PORT);
-bind(send_sock, (struct sockaddr*)&send_addr, sizeof(send_addr));
-//set target address
-struct sockaddr_in end_addr;   
-memset(&end_addr, 0,sizeof(end_addr));
-end_addr.sin_family = AF_INET;  
-end_addr.sin_addr.s_addr = inet_addr(END_IP);  
-end_addr.sin_port = htons(END_PORT);  
-//set send data
-char send_data[] = "srsRAN EPC SEND TO ENB TEST";
+  //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-//--------------------------------------------------------------------------------------
-//Receive data from ENB
-
-// create socket
-int rec_sock=socket(AF_INET,SOCK_DGRAM,0);
-//set my address
-struct sockaddr_in rec_addr;
-memset(&rec_addr,0,sizeof(rec_addr));
-rec_addr.sin_family=AF_INET;
-rec_addr.sin_addr.s_addr=inet_addr(recv_ip);
-rec_addr.sin_port=htons(recv_port);
-//bind my address
-bind(rec_sock,(struct sockaddr*)&rec_addr,sizeof(rec_addr));
-//set from address
-struct sockaddr_in from_addr;
-socklen_t len=sizeof(from_addr);  
-//set receive buffer
-char buffer[1500]="";
-
-//set transmit number
-int num=0;
-
-
-//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  
-  
-  
-  
   while (running) {
+    /*
+    //receive data
+    ssize_t rec_id=recvfrom(epc_sock,buffer,sizeof(buffer),0,(struct sockaddr*)&from_addr,&len);
+    printf("-----------------------------receiving---------------------------\n");
+    printf("index: %d\n",num);
+    printf("my ip:\t\t%s:%d\n",inet_ntoa(send_addr.sin_addr), ntohs(send_addr.sin_port));
+    printf("source ip :\t%s:%d\n",inet_ntoa(from_addr.sin_addr), ntohs(from_addr.sin_port));
+    printf("receive bytes length :\t%zd\n",rec_id);
+    printf("receive data is\t%s\n",buffer);
+    printf("-----------------------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
 
-  /*
-//receive data         
-ssize_t rec_id=recvfrom(rec_sock,buffer,sizeof(buffer),0,(struct sockaddr*)&from_addr,&len);         
-printf("-----------------------------receiving---------------------------\n");
-printf("index: %d\n",num);
-printf("my ip:\t\t%s:%d\n",inet_ntoa(rec_addr.sin_addr), ntohs(rec_addr.sin_port));
-printf("source ip :\t%s:%d\n",inet_ntoa(from_addr.sin_addr), ntohs(from_addr.sin_port));
-printf("receive bytes length :\t%zd\n",rec_id);
-printf("receive data is\t%s\n",buffer);
-printf("-----------------------------------------------------------------\n");
-printf("\n");
-printf("\n");
-        
+    //send data
+    ssize_t send_id=sendto(epc_sock, send_data, strlen(send_data), 0, (struct sockaddr*)&end_addr, sizeof(end_addr));
+    printf("-----------------------------sending-----------------------------\n");
+    printf("index: %d\n",num);
+    printf("my ip:               %s:%d\n",inet_ntoa(send_addr.sin_addr), ntohs(send_addr.sin_port));
+    printf("target ip :          %s:%d\n",inet_ntoa(end_addr.sin_addr), ntohs(end_addr.sin_port));
+    printf("send bytes length :  %zd\n",send_id);
+    printf("send data is         %s\n",send_data);
+    printf("-----------------------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
+    num++;
+    */
+/*
+    using boost::asio::ip::udp;
 
-         
-//send data
-ssize_t send_id=sendto(send_sock, send_data, strlen(send_data), 0, (struct sockaddr*)&end_addr, sizeof(end_addr));
-printf("-----------------------------sending-----------------------------\n");
-printf("index: %d\n",num);
-printf("my ip:               %s:%d\n",inet_ntoa(send_addr.sin_addr), ntohs(send_addr.sin_port));
-printf("target ip :          %s:%d\n",inet_ntoa(end_addr.sin_addr), ntohs(end_addr.sin_port));
-printf("send bytes length :  %zd\n",send_id);
-printf("send data is         %s\n",send_data);
-printf("-----------------------------------------------------------------\n");
-printf("\n");
-printf("\n");
-num++;
+    using boost::asio::ip::address_v4;
+
+    try {
+      boost::asio::io_service io_service;
+
+      // 创建UDP套接字
+      address_v4    receiver_address = address_v4::from_string("127.0.0.1");
+      udp::endpoint bind_endpoint(receiver_address, 10002);
+      udp::socket   socket(io_service, bind_endpoint);
+
+      // 输出绑定的本地端点信息
+      udp::endpoint local_endpoint = socket.local_endpoint();
+      std::cout << "Listening on UDP endpoint: " << local_endpoint << std::endl;
+      // 创建接收线程
+      std::thread receiver_thread([&]() { receive(socket); });
+
+      address_v4 send_address = address_v4::from_string("127.0.0.1");
+
+      // 假设我们知道要发送到的地址和端口
+      udp::endpoint destination(send_address, 10004);
+
+      std::string message;
+      std::cout << "Enter the message to send: ";
+      std::getline(std::cin, message);
+      // 发送一些数据
+      std::thread send_thread([&]() {
+        for (;;) {
+          std::string message;
+          std::cout << "Enter the message to send: ";
+          std::getline(std::cin, message);
+
+          send(socket, destination, message);
+        }
+      });
+
+      // 等待一段时间以接收响应或进行其他操作
+      // std::this_thread::sleep_for(std::chrono::seconds(5));
+
+      // 停止接收线程（实际上，在这个例子中，我们不会停止它，因为它是一个无限循环）
+      // 在实际应用中，您可能需要一种机制来优雅地停止接收线程
+
+      // 等待接收线程完成（如果使用了停止机制，则取消注释以下行）
+      receiver_thread.join();
+      send_thread.join();
+    } catch (std::exception& e) {
+      std::cerr << "Exception: " << e.what() << std::endl;
+    }
 */
-
-sleep(1);
-          
-           
-           
-
-
+    sleep(1);
   }
-  close(send_sock);
-  close(rec_sock);    
+  close(epc_sock);
   mme->stop();
   mme->cleanup();
   spgw->stop();
@@ -584,12 +647,6 @@ sleep(1);
   hss->cleanup();
 
   cout << std::endl << "---  exiting  ---" << endl;
-  
-
-
-
-
-
 
   return 0;
 }

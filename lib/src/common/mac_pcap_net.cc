@@ -138,7 +138,7 @@ void mac_pcap_net::write_mac_lte_pdu_to_net(pcap_pdu_t& pdu)
                       0,
                       (const struct sockaddr*)&client_addr,
                       sizeof(client_addr));
-
+printf("client1 IP = %s, Port = %d \n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
   if ((int)pdu.pdu.get()->N_bytes != bytes_sent || bytes_sent < 0) {
     logger.error(
         "Sending UDP packet mismatches %d != %d (err %s)", pdu.pdu.get()->N_bytes, bytes_sent, strerror(errno));
@@ -172,7 +172,7 @@ void mac_pcap_net::write_mac_nr_pdu_to_net(pcap_pdu_t& pdu)
                       0,
                       (const struct sockaddr*)&client_addr,
                       sizeof(client_addr));
-
+printf("client2 IP = %s, Port = %d \n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
   if ((int)pdu.pdu.get()->N_bytes != bytes_sent || bytes_sent < 0) {
     logger.error(
         "Sending UDP packet mismatches %d != %d (err %s)", pdu.pdu.get()->N_bytes, bytes_sent, strerror(errno));
