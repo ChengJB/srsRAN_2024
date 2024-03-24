@@ -1,11 +1,4 @@
-# srsRAN UDP
-## 原理(文件中的pic.png图片）
-
-### IP:网卡IPv4（ifconfig） PORT：1111-8888
-
-
-
-![pic](C:\Users\ChengJiangBo\Desktop\srsRAN_2024\pic.png)
+# srsRAN UDP(待更新）
 
 ## UDP文件（可进行独立测试）
 
