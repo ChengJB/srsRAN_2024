@@ -21,8 +21,8 @@
 
 #include "srsepc/hdr/spgw/gtpu.h"
 #include "srsepc/hdr/mme/mme_gtpc.h"
-#include "srsran/common/string_helpers.h"
 #include "srsran/common/network_utils.h"
+#include "srsran/common/string_helpers.h"
 #include "srsran/upper/gtpu.h"
 #include <algorithm>
 #include <arpa/inet.h>
@@ -36,7 +36,7 @@
 #include <sys/socket.h>
 
 namespace srsepc {
-
+int num=0;
 /**************************************
  *
  * GTP-U class that handles the packet
@@ -156,7 +156,8 @@ int spgw::gtpu::init_sgi(spgw_args_t* args)
   }
 
   ifr.ifr_netmask.sa_family = AF_INET;
-  if (inet_pton(ifr.ifr_netmask.sa_family , "255.255.255.0", &((struct sockaddr_in*)&ifr.ifr_netmask)->sin_addr.s_addr) != 1) {
+  if (inet_pton(
+          ifr.ifr_netmask.sa_family, "255.255.255.0", &((struct sockaddr_in*)&ifr.ifr_netmask)->sin_addr.s_addr) != 1) {
     perror("inet_pton");
     return false;
   }
@@ -184,13 +185,13 @@ int spgw::gtpu::init_s1u(spgw_args_t* args)
   m_s1u_up = true;
 
   // Bind the socket
-  m_s1u_addr.sin_family      = AF_INET;
+  m_s1u_addr.sin_family = AF_INET;
   if (inet_pton(m_s1u_addr.sin_family, args->gtpu_bind_addr.c_str(), &m_s1u_addr.sin_addr.s_addr) != 1) {
     m_logger.error("Invalid gtpu_bind_addr: %s", args->gtpu_bind_addr.c_str());
     srsran::console("Invalid gtpu_bind_addr: %s\n", args->gtpu_bind_addr.c_str());
     return SRSRAN_ERROR_CANT_START;
   }
-  m_s1u_addr.sin_port        = htons(GTPU_RX_PORT);
+  m_s1u_addr.sin_port = htons(GTPU_RX_PORT);
 
   if (bind(m_s1u, (struct sockaddr*)&m_s1u_addr, sizeof(struct sockaddr_in))) {
     m_logger.error("Failed to bind socket: %s", strerror(errno));
@@ -302,29 +303,16 @@ void spgw::gtpu::send_s1u_pdu(srsran::gtp_fteid_t enb_fteid, srsran::byte_buffer
     goto out;
   }
 
-
-
-
-
-struct sockaddr_in route_addr;
+  struct sockaddr_in route_addr;
   memset(&route_addr, 0, sizeof(route_addr));
   route_addr.sin_family      = AF_INET;
   route_addr.sin_port        = htons(2152);
   route_addr.sin_addr.s_addr = inet_addr("127.0.100.88");
 
-
-
-
-
-
-
-
-
-
-
   // Send packet to destination
-  n = sendto(m_s1u, msg->msg, msg->N_bytes, 0, (struct sockaddr*)& route_addr, sizeof( route_addr));
-    printf("route IP = %s, Port = %d \n", inet_ntoa(route_addr.sin_addr), ntohs(route_addr.sin_port));
+  n = sendto(m_s1u, msg->msg, msg->N_bytes, 0, (struct sockaddr*)&route_addr, sizeof(route_addr));
+  //printf("index: %d \n",num++);
+  printf("EPC send   to  route IP = %s, Port = %d \n", inet_ntoa(route_addr.sin_addr), ntohs(route_addr.sin_port));
   if (n < 0) {
     m_logger.error("Error sending packet to eNB");
   } else if ((unsigned int)n != msg->N_bytes) {

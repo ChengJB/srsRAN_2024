@@ -1,16 +1,16 @@
 #include <arpa/inet.h>
+#include <boost/asio.hpp>
+#include <iostream>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <thread>
 #include <unistd.h>
-#include <iostream>  
-#include <thread>  
-#include <vector>  
-#include <boost/asio.hpp>  
-using boost::asio::ip::udp;  
+#include <vector>
+using boost::asio::ip::udp;
 
 #define ROUTE_PORT 2152
 #define ROUTE_IP "127.0.100.88"
@@ -25,29 +25,12 @@ struct Client {
   struct sockaddr_in addr;
   socklen_t          addr_len;
 };
-
+int num=0;
 void routeMessage(Client* client, int route_fd)
 {
-
-
- 
-       
-         
-
-
-
-
-
-
-
-
-
-
-
   struct sockaddr_in from_addr;
   socklen_t          from_len = sizeof(from_addr);
-  char buffer[1500];
-
+  unsigned char      buffer[1500];
 
   while (1) {
     int bytes = recvfrom(route_fd, buffer, sizeof(buffer), 0, (struct sockaddr*)&(from_addr), &(from_len));
@@ -55,19 +38,16 @@ void routeMessage(Client* client, int route_fd)
       printf("recvfrom error");
       break;
     }
+ //printf("index: %d \n",num++);
+    // 打印收到的消息
+    printf("Received message from %s:%d\n", inet_ntoa(from_addr.sin_addr), ntohs(from_addr.sin_port));
+    // printf("buffer = %s\n", buffer);
 
-
-
-
-
-
-
-
-    printf("buffer = %s\n", buffer);
     //
     Client toClient = (from_addr.sin_addr.s_addr == inet_addr(EPC_IP)) ? client[1] : client[0];
-   
+
     // 发送给对应的client
+    printf("Send message to %s:%d \n", inet_ntoa(toClient.addr.sin_addr), ntohs(toClient.addr.sin_port));
     sendto(route_fd, buffer, bytes, 0, (struct sockaddr*)&(toClient.addr), toClient.addr_len);
   }
 }
